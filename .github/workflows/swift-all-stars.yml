@@ -33,13 +33,7 @@ jobs:
       uses: norio-nomura/action-swiftlint@3.2.1
       env:
         WORKING_DIRECTORY: Sources
-    - name: Generate Docs
-      uses: SwiftDocOrg/swift-doc@master
+    - name: Generate docs
+      uses: sersoft-gmbh/swifty-docs-action@v1
       with:
-        inputs: "Sources"
-        module-name: ${{ matrix.module }}
-        output: "Documentation"
-    - name: Upload Docs to Wiki
-      uses: SwiftDocOrg/github-wiki-publish-action@v1
-      with:
-        path: "Documentation"
+        output: docs
