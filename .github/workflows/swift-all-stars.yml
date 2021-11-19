@@ -38,12 +38,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Lint (check)
-      uses: norio-nomura/action-swiftlint@3.2.1
     - name: Lint (fix)
       uses: norio-nomura/action-swiftlint@3.2.1
       with:
         args: --fix
+    - name: Lint (check)
+      uses: norio-nomura/action-swiftlint@3.2.1
     - name: Check for changes
       run: |
         echo "GIT_DIFF_STAT=$(git diff --stat)" >> $GITHUB_ENV
