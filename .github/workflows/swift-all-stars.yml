@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         swift: [5.5]
-        os: [macos-latest]
+        os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -27,3 +27,7 @@ jobs:
       run: swift build -v
     - name: Run tests
       run: swift test -v
+    - name: Lint
+      uses: norio-nomura/action-swiftlint@3.2.1
+      env:
+        WORKING_DIRECTORY: Sources
