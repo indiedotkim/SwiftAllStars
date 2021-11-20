@@ -7,11 +7,25 @@ name: build
 #
 # - change `module: [Example]` to match your module's name. If unsure,
 #   then check the name inside your `Sources` directory of your repo.
-# - change `swift: [5.5]` to match the Swift version or versions that you
-#   want to test against.
+# - change `swift: [5.5]` to match the Swift version(s) that you
+#   want to test against. For example, `swift: [5.4,5.5]`.
 # - `os: [ubuntu-latest]` can be change to specific Ubuntu releases.
 #   Right now, neither slashmo's Swift installer nor norio-nomura's
 #   swiftlint support macOS inside of GitHub actions.
+#
+# What Swift All-Stars does:
+#
+# Build & Unit-Testing
+# - installs Swift
+# - builds your application
+# - runs unit-tests
+#
+# Linting & Auto-Correct
+# - runs an auto-correct on your code
+# - checks for linter errors
+# - if auto-correct made changes
+#   - extract the issue number of the original commit (can be empty)
+#   - commit the changes and include the issue number
 
 on:
   push:
@@ -24,8 +38,7 @@ jobs:
     name: Build & Unit-Testing
     strategy:
       matrix:
-        module: [Example]
-        swift: [5.4,5.5]
+        swift: [5.5]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
@@ -43,7 +56,7 @@ jobs:
       run: swift test -v
 
   lint:
-    name: Linting
+    name: Linting & Auto-Correct
     needs: test
 
     runs-on: ubuntu-latest
