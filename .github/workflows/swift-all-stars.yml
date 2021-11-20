@@ -5,8 +5,6 @@ name: build
 #
 # Modify the following:
 #
-# - change `module: [Example]` to match your module's name. If unsure,
-#   then check the name inside your `Sources` directory of your repo.
 # - change `swift: [5.5]` to match the Swift version(s) that you
 #   want to test against. For example, `swift: [5.4,5.5]`.
 # - `os: [ubuntu-latest]` can be change to specific Ubuntu releases.
@@ -26,6 +24,10 @@ name: build
 # - if auto-correct made changes
 #   - extract the issue number of the original commit (can be empty)
 #   - commit the changes and include the issue number
+#
+# Credits:
+# - https://github.com/slashmo/install-swift
+# - https://github.com/norio-nomura/action-swiftlint
 
 on:
   push:
