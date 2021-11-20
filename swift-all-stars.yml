@@ -1,0 +1,88 @@
+name: Swift All-Stars
+
+# Swift All-Stars
+# https://github.com/indiedotkim/SwiftAllStars
+#
+# Modify the following:
+#
+# - change `swift: [5.5]` to match the Swift version(s) that you
+#   want to test against. For example, `swift: [5.4,5.5]`.
+# - `os: [ubuntu-latest]` can be change to specific Ubuntu releases.
+#   Right now, neither slashmo's Swift installer nor norio-nomura's
+#   swiftlint support macOS inside of GitHub actions.
+#
+# What Swift All-Stars does:
+#
+# Build & Unit-Testing
+# - installs Swift
+# - builds your application
+# - runs unit-tests
+#
+# Linting & Auto-Correct
+# - runs an auto-correct on your code
+# - checks for linter errors
+# - if auto-correct made changes
+#   - extract the issue number of the original commit (can be empty)
+#   - commit the changes and include the issue number
+#
+# Credits:
+# - https://github.com/slashmo/install-swift
+# - https://github.com/norio-nomura/action-swiftlint
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+
+jobs:
+  test:
+    name: Build & Unit-Testing
+    strategy:
+      matrix:
+        swift: [5.5]
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Install Swift
+      uses: slashmo/install-swift@v0.1.0
+      with:
+        version: ${{ matrix.swift }}
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
+
+  lint:
+    name: Linting & Auto-Correct
+    needs: test
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Lint (fix)
+      uses: norio-nomura/action-swiftlint@3.2.1
+      with:
+        args: --fix
+    - name: Lint (check)
+      uses: norio-nomura/action-swiftlint@3.2.1
+    - name: Check for changes
+      run: |
+        echo "GIT_DIFF_STAT=$(git diff --stat | wc -l | tr -d ' ')" >> $GITHUB_ENV
+    - name: Get issue number
+      if: ${{ env.GIT_DIFF_STAT != '' }}
+      run: |
+        echo "GITHUB_ISSUE_NUMBER=$(git log -n 1 --oneline | sed -E 's/^[^#]*$//')" >> $GITHUB_ENV
+    - name: Commit and push fixes
+      if: ${{ env.GIT_DIFF_STAT != '' }}
+      run: |
+        git config --global user.name swift-all-stars
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git commit -a -m "swiftlint fixes. #${GITHUB_ISSUE_NUMBER}"
+        git push
