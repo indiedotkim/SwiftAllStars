@@ -1,4 +1,8 @@
 name: Swift All-Stars
+description: 'Swift unit-testing, linting, and auto-correct'
+branding:
+  icon: star
+  color: orange
 
 # Swift All-Stars
 # https://github.com/indiedotkim/SwiftAllStars
