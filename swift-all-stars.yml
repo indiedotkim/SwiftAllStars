@@ -76,11 +76,11 @@ jobs:
       run: |
         echo "GIT_DIFF_STAT=$(git diff --stat | wc -l | tr -d ' ')" >> $GITHUB_ENV
     - name: Get issue number
-      if: ${{ env.GIT_DIFF_STAT != '' }}
+      if: ${{ env.GIT_DIFF_STAT != '0' }}
       run: |
         echo "GITHUB_ISSUE_NUMBER=$(git log -n 1 --oneline | sed -E 's/^[^#]*$//')" >> $GITHUB_ENV
     - name: Commit and push fixes
-      if: ${{ env.GIT_DIFF_STAT != '' }}
+      if: ${{ env.GIT_DIFF_STAT != '0' }}
       run: |
         git config --global user.name swift-all-stars
         git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
